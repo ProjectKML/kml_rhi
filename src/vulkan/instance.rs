@@ -1,5 +1,4 @@
-use ash::Entry;
-use ash::vk;
+use ash::{vk, Entry};
 
 use crate::{Error, InstanceDesc};
 
@@ -11,11 +10,10 @@ impl VulkanInstance {
     pub unsafe fn new(desc: &InstanceDesc) -> Result<Self, Error> {
         let entry = Entry::load().unwrap();
 
-        let application_info = vk::ApplicationInfo::default()
-            .api_version(vk::API_VERSION_1_3);
+        let application_info = vk::ApplicationInfo::default().api_version(vk::API_VERSION_1_3);
 
-        let instance_create_info = vk::InstanceCreateInfo::default()
-            .application_info(&application_info);
+        let instance_create_info =
+            vk::InstanceCreateInfo::default().application_info(&application_info);
 
         todo!()
     }
