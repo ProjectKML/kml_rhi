@@ -1,7 +1,7 @@
-use crate::metal::MetalPhysicalDevice;
-use crate::{Error, InstanceDesc, PhysicalDevice};
-use objc2::__framework_prelude::Retained;
+use objc2::rc::Retained;
 use objc2_metal::{MTLCopyAllDevices, MTLDevice};
+
+use crate::{metal::MetalPhysicalDevice, Error, InstanceDesc, PhysicalDevice};
 
 pub struct MetalInstance {
     physical_devices: Vec<PhysicalDevice>,

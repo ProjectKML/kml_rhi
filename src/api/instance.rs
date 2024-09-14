@@ -58,9 +58,7 @@ impl Instance {
 
     pub fn get_physical_devices(&self) -> &[PhysicalDevice] {
         match self {
-            Instance::Metal(instance) => {
-                instance.get_physical_devices()
-            }
+            Instance::Metal(instance) => instance.get_physical_devices(),
             Instance::Vulkan(instance) => {
                 todo!()
             }

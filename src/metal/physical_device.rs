@@ -1,7 +1,7 @@
-use crate::{Error, PhysicalDeviceFeatures};
-use objc2::rc::Retained;
-use objc2::runtime::ProtocolObject;
+use objc2::{rc::Retained, runtime::ProtocolObject};
 use objc2_metal::MTLDevice;
+
+use crate::{Error, PhysicalDeviceFeatures};
 
 pub struct MetalPhysicalDevice {
     mtl_device: Retained<ProtocolObject<dyn MTLDevice>>,

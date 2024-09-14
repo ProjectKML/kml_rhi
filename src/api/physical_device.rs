@@ -10,9 +10,7 @@ pub struct PhysicalDeviceFeatures {}
 impl PhysicalDevice {
     pub fn get_name(&self) -> &str {
         match self {
-            PhysicalDevice::Metal(physical_device) => {
-                physical_device.get_name()
-            }
+            PhysicalDevice::Metal(physical_device) => physical_device.get_name(),
         }
     }
 
