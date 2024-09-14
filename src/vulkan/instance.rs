@@ -1,9 +1,14 @@
+use ash::Entry;
+
 use crate::{Error, InstanceDesc};
 
-pub struct VulkanInstance {}
+pub struct VulkanInstance {
+    entry_loader: Entry,
+}
 
 impl VulkanInstance {
-    pub fn new(desc: &InstanceDesc) -> Result<Self, Error> {
+    pub unsafe fn new(desc: &InstanceDesc) -> Result<Self, Error> {
+        let entry = Entry::load().unwrap();
         todo!()
     }
 }
