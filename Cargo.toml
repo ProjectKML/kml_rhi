@@ -7,7 +7,18 @@ edition = "2021"
 ash = { version = "0.38.0+1.3.281", optional = true }
 bitflags = "2.6.0"
 objc2 = { version = "0.5.2", features = [], optional = true }
-objc2-metal = { version = "0.2.2", features = ["MTLDevice"], optional = true }
+objc2-metal = { version = "0.2.2", features = [
+    "MTLAccelerationStructureTypes",
+    "MTLLibrary",
+    "MTLRenderPipeline",
+    "MTLRenderCommandEncoder",
+    "MTLCommandBuffer",
+    "MTLCommandEncoder",
+    "MTLCommandQueue",
+    "MTLPixelFormat",
+    "MTLDevice",
+    "MTLDrawable",
+    "MTLRenderPass"], optional = true }
 thiserror = "1.0.63"
 
 [features]

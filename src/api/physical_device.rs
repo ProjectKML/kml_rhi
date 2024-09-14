@@ -1,4 +1,9 @@
-pub enum PhysicalDevice {}
+#[cfg(feature = "metal")]
+use crate::metal::MetalPhysicalDevice;
+
+pub enum PhysicalDevice {
+    Metal(MetalPhysicalDevice),
+}
 
 pub struct PhysicalDeviceFeatures {}
 
