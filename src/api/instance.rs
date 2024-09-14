@@ -16,9 +16,7 @@ bitflags! {
 
 #[derive(Copy, Clone, Debug)]
 pub enum BackendType {
-    #[cfg(feature = "metal")]
     Metal,
-    #[cfg(feature = "vulkan")]
     Vulkan,
 }
 
@@ -54,6 +52,7 @@ impl Instance {
             BackendType::Metal => Ok(Self::Metal(MetalInstance::new(desc)?)),
             #[cfg(feature = "vulkan")]
             BackendType::Vulkan => Ok(Self::Vulkan(VulkanInstance::new(desc)?)),
+            _ => todo!(),
         }
     }
 
