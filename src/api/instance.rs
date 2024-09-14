@@ -58,7 +58,9 @@ impl Instance {
 
     pub fn get_physical_devices(&self) -> &[PhysicalDevice] {
         match self {
+            #[cfg(feature = "metal")]
             Instance::Metal(instance) => instance.get_physical_devices(),
+            #[cfg(feature = "vulkan")]
             Instance::Vulkan(instance) => {
                 todo!()
             }

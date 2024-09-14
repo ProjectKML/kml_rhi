@@ -2,3 +2,8 @@
 Cargo.lock
 target/
 .DS_Store
+
+# Binary files
+*.dll
+*.dylib
+*.so

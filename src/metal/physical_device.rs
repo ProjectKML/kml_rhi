@@ -14,6 +14,8 @@ impl MetalPhysicalDevice {
 
         Ok(Self { mtl_device, name })
     }
+
+    #[inline]
     pub fn get_name(&self) -> &str {
         &self.name
     }
