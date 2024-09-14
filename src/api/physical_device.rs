@@ -9,7 +9,11 @@ pub struct PhysicalDeviceFeatures {}
 
 impl PhysicalDevice {
     pub fn get_name(&self) -> &str {
-        todo!()
+        match self {
+            PhysicalDevice::Metal(physical_device) => {
+                physical_device.get_name()
+            }
+        }
     }
 
     pub fn get_supported_features(&self) -> &PhysicalDeviceFeatures {

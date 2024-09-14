@@ -17,10 +17,14 @@ impl MetalInstance {
         }?;
 
         let physical_devices = devices
-            .iter()
-            .map(|device| Ok(PhysicalDevice::Metal(MetalPhysicalDevice::new()?)))
+            .into_iter()
+            .map(|device| Ok(PhysicalDevice::Metal(MetalPhysicalDevice::new(device)?)))
             .collect::<Result<Vec<_>, Error>>()?;
 
         Ok(Self { physical_devices })
+    }
+
+    pub fn get_physical_devices(&self) -> &[PhysicalDevice] {
+        &self.physical_devices
     }
 }
