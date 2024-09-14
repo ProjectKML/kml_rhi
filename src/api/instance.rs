@@ -4,7 +4,9 @@ use bitflags::bitflags;
 use crate::metal::MetalInstance;
 #[cfg(feature = "vulkan")]
 use crate::vulkan::VulkanInstance;
-use crate::{api::physical_device::PhysicalDevice, Error};
+use crate::{
+    api::physical_device::PhysicalDevice, vulkan::VulkanDevice, Device, DeviceDesc, Error,
+};
 
 bitflags! {
     #[repr(transparent)]
@@ -46,6 +48,7 @@ pub enum Instance {
 }
 
 impl Instance {
+    #[inline]
     pub unsafe fn new(desc: &InstanceDesc) -> Result<Self, Error> {
         match desc.backend_type {
             #[cfg(feature = "metal")]
@@ -56,14 +59,23 @@ impl Instance {
         }
     }
 
+    #[inline]
     pub fn get_physical_devices(&self) -> &[PhysicalDevice] {
         match self {
             #[cfg(feature = "metal")]
             Instance::Metal(instance) => instance.get_physical_devices(),
             #[cfg(feature = "vulkan")]
-            Instance::Vulkan(instance) => {
-                todo!()
-            }
+            Instance::Vulkan(instance) => instance.get_physical_devices(),
+        }
+    }
+
+    #[inline]
+    pub fn create_device(&self, desc: &DeviceDesc) -> Result<Device, Error> {
+        match self {
+            #[cfg(feature = "metal")]
+            Instance::Metal(instance) => todo!(),
+            #[cfg(feature = "vulkan")]
+            Instance::Vulkan(instance) => Ok(Device::Vulkan(VulkanDevice::new(instance, desc)?)),
         }
     }
 }

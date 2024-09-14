@@ -3,6 +3,7 @@ use crate::metal::MetalPhysicalDevice;
 #[cfg(feature = "vulkan")]
 use crate::vulkan::VulkanPhysicalDevice;
 
+#[derive(Clone)]
 pub enum PhysicalDevice {
     #[cfg(feature = "metal")]
     Metal(MetalPhysicalDevice),

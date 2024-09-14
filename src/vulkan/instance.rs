@@ -248,6 +248,11 @@ impl VulkanInstance {
     }
 
     #[inline]
+    pub fn instance(&self) -> &ash::Instance {
+        &self.0.instance
+    }
+
+    #[inline]
     pub fn get_physical_devices(&self) -> &[PhysicalDevice] {
         &self.0.physical_devices
     }
