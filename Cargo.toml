@@ -22,8 +22,9 @@ objc2-metal = { version = "0.2.2", features = [
     "MTLDrawable",
     "MTLRenderPass"], optional = true }
 thiserror = "1.0.63"
+vk-mem-alloc = { git = "https://github.com/projectkml/vk-mem-alloc-rs", optional = true }
 
 [features]
 default = ["metal", "vulkan"]
 metal = ["objc2", "objc2-metal"]
-vulkan = ["ash"]
+vulkan = ["ash", "vk-mem-alloc"]

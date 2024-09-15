@@ -1,6 +1,7 @@
 use std::sync::Arc;
 
 use ash::{ext::mesh_shader, vk};
+use vk_mem_alloc::{Allocator, AllocatorCreateFlags, AllocatorCreateInfo};
 
 use crate::{
     vulkan::{VulkanError, VulkanInstance},
@@ -11,9 +12,11 @@ struct Inner {
     device: ash::Device,
 
     ext_mesh_shader_device: mesh_shader::Device,
+
+    allocator: Allocator,
 }
 
-unsafe fn find_direct_queue_family_index(properties: &[vk::QueueFamilyProperties]) -> Option<u32> {
+fn find_direct_queue_family_index(properties: &[vk::QueueFamilyProperties]) -> Option<u32> {
     let mut queue_count: u32 = 0;
     let mut family_index: u32 = 0;
 
@@ -38,7 +41,7 @@ unsafe fn find_direct_queue_family_index(properties: &[vk::QueueFamilyProperties
     }
 }
 
-unsafe fn find_queue_family_index(
+fn find_queue_family_index(
     properties: &[vk::QueueFamilyProperties],
     desired_flags: vk::QueueFlags,
     undesired_flags: vk::QueueFlags,
@@ -65,11 +68,7 @@ unsafe fn find_queue_family_index(
     }
 }
 
-unsafe fn find_queue_family_indices(
-    instance: &VulkanInstance,
-    physical_device: vk::PhysicalDevice,
-    properties: &[vk::QueueFamilyProperties],
-) -> Option<(u32, u32, u32)> {
+fn find_queue_family_indices(properties: &[vk::QueueFamilyProperties]) -> Option<(u32, u32, u32)> {
     let direct_index = find_direct_queue_family_index(properties)?;
     let compute_index = find_queue_family_index(
         properties,
@@ -125,7 +124,41 @@ impl VulkanDevice {
             return Err(VulkanError::Custom("Invalid physical device".to_owned()));
         };
 
-        let device_create_info = vk::DeviceCreateInfo::default();
+        let queue_family_properties = unsafe {
+            instance
+                .instance()
+                .get_physical_device_queue_family_properties(*physical_device.physical_device())
+        };
+
+        let (direct_queue_family_index, compute_queue_family_index, transfer_queue_family_index) =
+            find_queue_family_indices(&queue_family_properties).ok_or(VulkanError::Custom(
+                "Failed to find queue family indices".to_owned(),
+            ))?;
+
+        let queue_priorities = [1.0];
+
+        let mut device_queue_create_infos = vec![vk::DeviceQueueCreateInfo::default()
+            .queue_family_index(direct_queue_family_index)
+            .queue_priorities(&queue_priorities)];
+
+        if compute_queue_family_index != direct_queue_family_index {
+            device_queue_create_infos.push(
+                vk::DeviceQueueCreateInfo::default()
+                    .queue_family_index(compute_queue_family_index)
+                    .queue_priorities(&queue_priorities),
+            );
+        }
+
+        if transfer_queue_family_index != direct_queue_family_index {
+            device_queue_create_infos.push(
+                vk::DeviceQueueCreateInfo::default()
+                    .queue_family_index(transfer_queue_family_index)
+                    .queue_priorities(&queue_priorities),
+            );
+        }
+
+        let device_create_info =
+            vk::DeviceCreateInfo::default().queue_create_infos(&device_queue_create_infos);
 
         let device = unsafe {
             instance.instance().create_device(
@@ -136,6 +169,18 @@ impl VulkanDevice {
         }?;
 
         let ext_mesh_shader_device = mesh_shader::Device::new(instance.instance(), &device);
+
+        let allocator = unsafe {
+            vk_mem_alloc::create_allocator(
+                instance.instance(),
+                *physical_device.physical_device(),
+                &device,
+                Some(&AllocatorCreateInfo {
+                    flags: AllocatorCreateFlags::BUFFER_DEVICE_ADDRESS,
+                    ..Default::default()
+                }),
+            )
+        }?;
 
         Ok(Self(Arc::new(Inner {
             device,
