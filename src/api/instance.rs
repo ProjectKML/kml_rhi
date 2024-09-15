@@ -7,6 +7,7 @@ use crate::vulkan::VulkanInstance;
 use crate::{
     api::physical_device::PhysicalDevice, vulkan::VulkanDevice, Device, DeviceDesc, Error,
 };
+use crate::metal::MetalDevice;
 
 bitflags! {
     #[repr(transparent)]
@@ -73,7 +74,7 @@ impl Instance {
     pub fn create_device(&self, desc: &DeviceDesc) -> Result<Device, Error> {
         match self {
             #[cfg(feature = "metal")]
-            Instance::Metal(instance) => todo!(),
+            Instance::Metal(instance) => Ok(Device::Metal(MetalDevice::new(instance, desc)?)),
             #[cfg(feature = "vulkan")]
             Instance::Vulkan(instance) => Ok(Device::Vulkan(VulkanDevice::new(instance, desc)?)),
         }

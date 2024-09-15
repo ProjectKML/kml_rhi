@@ -6,10 +6,8 @@ use std::{
 use ash::{ext::debug_utils, khr::surface, prelude::VkResult, vk, Entry};
 use log::{log, warn, Level};
 
-use crate::{
-    vulkan::{VulkanError, VulkanPhysicalDevice},
-    Error, InstanceDesc, InstanceFlags, PhysicalDevice,
-};
+use crate::{vulkan::{VulkanError, VulkanPhysicalDevice}, Error, InstanceDesc, InstanceFlags, PhysicalDevice, Device};
+use crate::vulkan::VulkanDevice;
 
 pub struct InstanceLayers {
     supported: Vec<vk::LayerProperties>,

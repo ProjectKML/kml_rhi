@@ -3,7 +3,7 @@ use kml_rhi::{BackendType, DeviceDesc, Instance, InstanceDesc, InstanceFlags};
 fn main() {
     let instance = unsafe {
         Instance::new(&InstanceDesc {
-            backend_type: BackendType::Vulkan,
+            backend_type: BackendType::Metal,
             ..Default::default()
         })
     }

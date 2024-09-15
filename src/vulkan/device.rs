@@ -186,6 +186,7 @@ impl VulkanDevice {
             device,
 
             ext_mesh_shader_device,
+            allocator,
         })))
     }
 

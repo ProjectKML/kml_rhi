@@ -28,4 +28,8 @@ impl MetalPhysicalDevice {
     pub fn get_supported_features(&self) -> &PhysicalDeviceFeatures {
         todo!()
     }
+
+    pub fn get_mtl_device(&self) -> Retained<ProtocolObject<dyn MTLDevice>> {
+        self.0.mtl_device.clone()
+    }
 }
